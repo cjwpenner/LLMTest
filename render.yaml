@@ -1,39 +1,29 @@
 services:
   - type: web
     name: openwebui
-    runtime: image          # <- pull a prebuilt image
     plan: free
+    runtime: image
     image:
-      url: docker.io/openwebui/open-webui:latest
+      url: openwebui/open-webui:latest
     envVars:
-      # --- DB connection pulled from the Postgres defined below ---
+      - key: PORT
+        value: "8080"
       - key: DATABASE_URL
         fromDatabase:
           name: openwebui-db
           property: connectionString
-
-      # --- First-boot admin; flip later ---
       - key: DEFAULT_USER_ROLE
         value: admin
       - key: ENABLE_SIGNUP
         value: "true"
-
-      # --- Persistence tweak (optional) ---
       - key: ENABLE_REALTIME_CHAT_SAVE
         value: "true"
-
-      # --- Groq (OpenAI-compatible) ---
       - key: OPENAI_API_BASE_URL
         value: https://api.groq.com/openai/v1
       - key: OPENAI_API_KEY
-        sync: false  # set the value in Render UI at first deploy
-
-      # --- Nice-to-have labels (optional) ---
+        sync: false
       - key: WEBUI_NAME
         value: "Open WebUI (Groq Llama 3.3)"
-      - key: WEBUI_URL
-        value: https://openwebui.onrender.com
-
 databases:
   - name: openwebui-db
     plan: free
