@@ -1,9 +1,10 @@
 services:
   - type: web
     name: openwebui
-    env: docker
     plan: free
-    dockerImage: openwebui/open-webui:latest
+    env: docker
+    docker:
+      image: openwebui/open-webui:latest
     envVars:
       # --- Database connection ---
       - key: DATABASE_URL
@@ -27,7 +28,7 @@ services:
       - key: OPENAI_API_KEY
         sync: false  # You’ll add this manually in Render’s dashboard
 
-      # --- Optional cosmetic/metadata settings ---
+      # --- Optional metadata ---
       - key: WEBUI_NAME
         value: "Open WebUI (Groq Llama 3.3)"
       - key: WEBUI_URL
