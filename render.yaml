@@ -7,13 +7,13 @@ services:
       url: ghcr.io/open-webui/open-webui:main
     healthCheckPath: /
     envVars:
-      # --- DB connection (use internal network for reliability) ---
+      # --- Database connection ---
       - key: DATABASE_URL
         fromDatabase:
           name: openwebui-db
-          property: internalConnectionString
+          property: connectionString
 
-      # --- First boot only; flip later ---
+      # --- Initial admin setup (flip later) ---
       - key: DEFAULT_USER_ROLE
         value: admin
       - key: ENABLE_SIGNUP
@@ -27,7 +27,7 @@ services:
       - key: OPENAI_API_BASE_URL
         value: https://api.groq.com/openai/v1
       - key: OPENAI_API_KEY
-        sync: false  # set this secret in Render's dashboard
+        sync: false  # add your Groq key in the Render dashboard
 
 databases:
   - name: openwebui-db
