@@ -7,22 +7,49 @@ services:
       url: ghcr.io/open-webui/open-webui:main
     healthCheckPath: /
     startCommand: >
-      sh -lc 'open-webui serve --host 0.0.0.0 --port ${PORT}'
+      sh -lc 'open-webui serve --host 0.0.0.0 --port ${PORT} --workers 1'
     envVars:
+      # ---- Core DB for chats (Render Postgres) ----
       - key: DATABASE_URL
         fromDatabase:
           name: openwebui-db
           property: connectionString
-      - key: DEFAULT_USER_ROLE
-        value: admin
+
+      # ---- First-boot admin (flip later) ----
       - key: ENABLE_SIGNUP
         value: "true"
-      - key: ENABLE_REALTIME_CHAT_SAVE
-        value: "true"
+      - key: DEFAULT_USER_ROLE
+        value: admin
+
+      # ---- Point chat LLM to Groq ----
       - key: OPENAI_API_BASE_URL
         value: https://api.groq.com/openai/v1
       - key: OPENAI_API_KEY
+        sync: false  # your gsk_... key
+
+      # ---- Keep RAM tiny: disable local embeddings/RAG ----
+      - key: VECTOR_DB
+        value: "qdrant"          # external, not Chroma
+      - key: ENABLE_RAG
+        value: "true"            # we will use external embeddings + external DB
+
+      # ---- Qdrant Cloud (external vector DB) ----
+      - key: QDRANT_URL
+        value: https://YOUR-QDRANT-CLUSTER-url
+      - key: QDRANT_API_KEY
         sync: false
+
+      # ---- Use remote embeddings, not local transformers ----
+      - key: RAG_EMBEDDING_ENGINE
+        value: openai
+      # If using VoyageAI (OpenAI-compatible style via separate base URL), set these:
+      - key: RAG_OPENAI_API_BASE_URL
+        value: https://api.voyageai.com/v1   # or OpenAI's default if you use OpenAI
+      - key: RAG_OPENAI_API_KEY
+        sync: false
+      # (Optionally tune:)
+      - key: RAG_EMBEDDING_BATCH_SIZE
+        value: "1"
 
 databases:
   - name: openwebui-db
