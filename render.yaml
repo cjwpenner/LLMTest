@@ -7,7 +7,10 @@ services:
       url: ghcr.io/open-webui/open-webui:main
     healthCheckPath: /
     startCommand: >
-      sh -lc 'open-webui serve --host 0.0.0.0 --port ${PORT} --workers 1'
+      sh -lc 'echo "RAG_OPENAI_API_BASE_URL=${RAG_OPENAI_API_BASE_URL}"; 
+          echo "RAG_OPENAI_BASE_URL=${RAG_OPENAI_BASE_URL}";
+          echo "RAG_EMBEDDING_ENGINE=${RAG_EMBEDDING_ENGINE}";
+          open-webui serve --host 0.0.0.0 --port ${PORT} --workers 1'
     envVars:
       # ---- Core DB for chats (Render Postgres) ----
       - key: DATABASE_URL
