@@ -21,33 +21,35 @@ services:
       - key: DEFAULT_USER_ROLE
         value: admin
 
-      # ---- Point chat LLM to Groq ----
+      # ---- Ensure env overrides any stale DB config ----
+      - key: PERSISTENT_CONFIG
+        value: "false"
+
+      # ---- Chat LLM via Groq (OpenAI-compatible) ----
       - key: OPENAI_API_BASE_URL
         value: https://api.groq.com/openai/v1
       - key: OPENAI_API_KEY
-        sync: false  # your gsk_... key
+        sync: false  # paste your gsk_... in Render UI
 
-      # ---- Keep RAM tiny: disable local embeddings/RAG ----
+      # ---- Vector store: Qdrant Cloud (external) ----
       - key: VECTOR_DB
-        value: "qdrant"          # external, not Chroma
+        value: qdrant
       - key: ENABLE_RAG
-        value: "true"            # we will use external embeddings + external DB
-
-      # ---- Qdrant Cloud (external vector DB) ----
-      - key: QDRANT_URL
-        value: https://YOUR-QDRANT-CLUSTER-url
+        value: "true"
+      - key: QDRANT_URI
+        value: https://YOUR-QDRANT-CLUSTER:6333     # e.g. https://...qdrant.io:6333
       - key: QDRANT_API_KEY
         sync: false
 
-      # ---- Use remote embeddings, not local transformers ----
+      # ---- Embeddings via OpenAI (not Voyage) ----
       - key: RAG_EMBEDDING_ENGINE
         value: openai
-      # If using VoyageAI (OpenAI-compatible style via separate base URL), set these:
       - key: RAG_OPENAI_API_BASE_URL
-        value: https://api.voyageai.com/v1   # or OpenAI's default if you use OpenAI
+        value: https://api.openai.com/v1
       - key: RAG_OPENAI_API_KEY
-        sync: false
-      # (Optionally tune:)
+        sync: false   # paste your sk_... in Render UI
+      - key: RAG_EMBEDDING_MODEL
+        value: text-embedding-3-small
       - key: RAG_EMBEDDING_BATCH_SIZE
         value: "1"
 
