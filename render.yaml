@@ -1,3 +1,4 @@
+
 services:
   - type: web
     name: openwebui
@@ -40,7 +41,7 @@ services:
       - key: ENABLE_RAG
         value: "true"
       - key: QDRANT_URI
-        value: https://YOUR-QDRANT-CLUSTER:6333     # e.g. https://...qdrant.io:6333
+        value: https://e4989f2e-319c-4f2c-a3a8-8ce0e74fd388.us-east4-0.gcp.cloud.qdrant.io:6333     # e.g. https://...qdrant.io:6333
       - key: QDRANT_API_KEY
         sync: false
 
