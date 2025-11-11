@@ -29,11 +29,17 @@ services:
       - key: PERSISTENT_CONFIG
         value: "false"
 
-      # ---- Quiet Ollama probes on Render ----
+      # --- HARD DISABLE OLLAMA (avoid startup checks) ---
       - key: ENABLE_OLLAMA
-        value: "false"
+        value: "false"              # legacy flag
+      - key: ENABLE_OLLAMA_API
+        value: "false"              # new flag some builds read
       - key: OLLAMA_BASE_URL
-        value: ""
+        value: ""                   # empty to prevent probes
+      - key: OLLAMA_BASE_URLS
+        value: ""                   # empty list alias
+      - key: OLLAMA_API_CONFIGS
+        value: "[]"                 # empty JSON for safety
 
       # ---- Chat LLM via Groq (OpenAI-compatible) ----
       - key: OPENAI_API_BASE_URL
