@@ -6,6 +6,7 @@ services:
     runtime: image
     image:
       url: ghcr.io/open-webui/open-webui:main
+    buildCommand: ""   # tells Render "don’t build"
     healthCheckPath: /
     startCommand: >
       sh -lc 'echo "RAG_OPENAI_API_BASE_URL=${RAG_OPENAI_API_BASE_URL}"; 
